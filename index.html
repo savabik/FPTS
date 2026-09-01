@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>মনস্তাত্ত্বিক ধরন যাচাই — FPTS বাংলা</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#132A2E;
+    --bg-deep:#0E2124;
+    --panel:#1B3A3F;
+    --panel-hi:#204449;
+    --ink:#F3EFE3;
+    --ink-muted:#AFC2BF;
+    --line:rgba(243,239,227,0.14);
+    --gold:#C9A227;
+    --rose:#C77489;
+    --teal:#52B9A6;
+    --rust:#D97A3D;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(201,162,39,0.10), transparent 60%),
+      radial-gradient(1000px 700px at 110% 20%, rgba(82,185,166,0.10), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Hind Siliguri', sans-serif;
+    min-height:100vh;
+    line-height:1.6;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Tiro Bangla', serif;
+    font-weight:400;
+    letter-spacing:0.01em;
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:36px 20px 80px;
+  }
+  header.top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:40px;
+  }
+  .mark{
+    width:34px;height:34px;flex:0 0 34px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    position:relative;
+  }
+  .mark::before,.mark::after{
+    content:"";
+    position:absolute;
+    top:50%;left:50%;
+    width:2px;height:26px;
+    background:var(--gold);
+    transform:translate(-50%,-50%) rotate(0deg);
+  }
+  .mark::after{
+    background:var(--teal);
+    transform:translate(-50%,-50%) rotate(90deg);
+  }
+  header.top .name{
+    font-size:15px;
+    color:var(--ink-muted);
+    letter-spacing:0.02em;
+  }
+
+  /* ---------- screens ---------- */
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* intro */
+  .intro h1{
+    font-size:38px;
+    line-height:1.25;
+    margin:0 0 14px;
+  }
+  .intro p{
+    color:var(--ink-muted);
+    font-size:16px;
+    max-width:52ch;
+  }
+  .intro .quads{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin:28px 0 30px;
+  }
+  .quad{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 16px;
+  }
+  .quad .k{font-size:12px;color:var(--ink-muted);margin-bottom:4px;}
+  .quad .v{font-size:15px;}
+  .quad.ei{border-top:3px solid var(--gold);}
+  .quad.jp{border-top:3px solid var(--rose);}
+  .quad.sn{border-top:3px solid var(--teal);}
+  .quad.tf{border-top:3px solid var(--rust);}
+
+  label.field-label{
+    display:block;
+    font-size:13px;
+    color:var(--ink-muted);
+    margin-bottom:6px;
+  }
+  input[type=text],input[type=email]{
+    width:100%;
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--ink);
+    border-radius:10px;
+    padding:12px 14px;
+    font-family:inherit;
+    font-size:15px;
+    margin-bottom:16px;
+  }
+  input:focus{outline:2px solid var(--teal);outline-offset:1px;}
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:var(--gold);
+    color:#1B1503;
+    border:none;
+    border-radius:999px;
+    padding:14px 28px;
+    font-family:'Hind Siliguri',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+  .btn.secondary{
+    background:transparent;
+    color:var(--ink);
+    border:1px solid var(--line);
+  }
+  .btn.ghost{
+    background:transparent;
+    color:var(--teal);
+    border:1px solid rgba(82,185,166,0.4);
+  }
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+
+  /* quiz */
+  .quiz-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:26px;
+  }
+  #compass{display:block;}
+  .progress-text{
+    font-size:13px;
+    color:var(--ink-muted);
+  }
+  .section-tag{
+    font-size:12px;
+    letter-spacing:0.04em;
+    color:var(--ink-muted);
+    margin-bottom:10px;
+  }
+  .section-tag b{color:var(--ink);font-weight:600;}
+  .qnum{
+    font-size:13px;
+    color:var(--ink-muted);
+    margin-bottom:6px;
+  }
+  .question-title{
+    font-size:22px;
+    line-height:1.5;
+    margin:0 0 22px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .opt{
+    text-align:right;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    font-size:17px;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background .15s ease, border-color .15s ease, transform .1s ease;
+    position:relative;
+  }
+  .opt:hover{background:var(--panel-hi);}
+  .opt.selected{
+    border-color:var(--gold);
+    background:var(--panel-hi);
+  }
+  .opt .letter{
+    display:inline-block;
+    width:22px;height:22px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    font-size:12px;
+    line-height:20px;
+    text-align:center;
+    margin-left:12px;
+    color:var(--ink-muted);
+  }
+  .quiz-nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:30px;
+  }
+
+  /* results */
+  .result-type{
+    font-size:56px;
+    letter-spacing:0.06em;
+    margin:0 0 6px;
+  }
+  .result-sub{color:var(--ink-muted);font-size:15px;margin-bottom:34px;}
+  #raw-summary,#weighted-summary{line-height:1.75;}
+  #raw-summary b,#weighted-summary b{color:var(--ink);}
+
+  .scale{
+    margin-bottom:22px;
+  }
+  .scale-labels{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    margin-bottom:8px;
+  }
+  .scale-labels .left{color:var(--ink);}
+  .scale-labels .right{color:var(--ink);}
+  .bar{
+    height:10px;
+    border-radius:999px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .bar .fill{
+    position:absolute;
+    top:0;bottom:0;left:0;
+    border-radius:999px;
+  }
+  .bar .marker{
+    position:absolute;top:-3px;
+    width:16px;height:16px;
+    border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--bg);
+    transform:translateX(-50%);
+  }
+  .scale-note{font-size:13px;color:var(--ink-muted);margin-top:6px;}
+
+  .card-note{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    font-size:14.5px;
+    color:var(--ink-muted);
+    margin:30px 0;
+  }
+  .card-note b{color:var(--ink);}
+
+  .actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:26px;
+  }
+
+  details.raw{
+    margin-top:30px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  details.raw summary{
+    cursor:pointer;
+    color:var(--teal);
+    font-size:14px;
+    margin-bottom:10px;
+  }
+  table.raw-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+  }
+  table.raw-table td, table.raw-table th{
+    border-bottom:1px solid var(--line);
+    padding:7px 6px;
+    text-align:right;
+  }
+  table.raw-table th{color:var(--ink-muted);font-weight:500;}
+  .toast{
+    position:fixed;
+    bottom:24px;left:50%;
+    transform:translateX(-50%) translateY(10px);
+    background:var(--panel-hi);
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:12px 20px;
+    border-radius:999px;
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+    z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media (max-width:420px){
+    .intro h1{font-size:30px;}
+    .result-type{font-size:44px;}
+    .question-title{font-size:19px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="mark" aria-hidden="true"></div>
+    <div class="name">এফপিটিএস — বাংলা মনস্তাত্ত্বিক ধরন যাচাই</div>
+  </header>
+
+  <!-- ===================== INTRO SCREEN ===================== -->
+  <section class="screen active" id="screen-intro">
+    <div class="intro">
+      <h1>আপনার মনের ধরন কেমন — তা নিয়ে ৪০টি ছোট প্রশ্ন।</h1>
+      <p>প্রতিটি প্রশ্নে দুটি বিকল্প থাকবে। কোনোটি সঠিক বা ভুল নয় — যেটি আপনার সঙ্গে বেশি মেলে, সেটিই বেছে নিন। পুরো পরীক্ষাটি চারটি ভাগে বিভক্ত, প্রতি ভাগে ১০টি করে প্রশ্ন।</p>
+
+      <div class="quads">
+        <div class="quad ei"><div class="k">ভাগ ১</div><div class="v">বহির্মুখী ↔ অন্তর্মুখী</div></div>
+        <div class="quad jp"><div class="k">ভাগ ২</div><div class="v">গুছানো ↔ খোলা মনোভাব</div></div>
+        <div class="quad sn"><div class="k">ভাগ ৩</div><div class="v">বাস্তবমুখী ↔ কল্পনামুখী</div></div>
+        <div class="quad tf"><div class="k">ভাগ ৪</div><div class="v">যুক্তি ↔ অনুভূতি</div></div>
+      </div>
+
+      <label class="field-label" for="uname">আপনার নাম (ঐচ্ছিক)</label>
+      <input type="text" id="uname" placeholder="যেমন: সাকিরুল ইসলাম">
+
+      <div>
+        <button class="btn" id="btn-start">শুরু করুন</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== QUIZ SCREEN ===================== -->
+  <section class="screen" id="screen-quiz">
+    <div class="quiz-head">
+      <svg id="compass" width="56" height="56" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="24" fill="none" stroke="var(--line)" stroke-width="2"></circle>
+        <path id="arc-ei" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"></path>
+        <path id="arc-jp" fill="none" stroke="var(--rose)" stroke-width="3" stroke-linecap="round"></path>
+        <path id="arc-sn" fill="none" stroke="var(--teal)" stroke-width="3" stroke-linecap="round"></path>
+        <path id="arc-tf" fill="none" stroke="var(--rust)" stroke-width="3" stroke-linecap="round"></path>
+      </svg>
+      <div class="progress-text" id="progress-text">প্রশ্ন ১ / ৪০</div>
+    </div>
+
+    <div class="section-tag" id="section-tag">ভাগ ১ · <b>বহির্মুখিতা ও অন্তর্মুখিতা</b></div>
+    <div class="qnum" id="qnum"></div>
+    <h2 class="question-title" id="question-title">—</h2>
+
+    <div class="options">
+      <div class="opt" id="opt-a" data-choice="A">
+        <span id="opt-a-text"></span><span class="letter">A</span>
+      </div>
+      <div class="opt" id="opt-b" data-choice="B">
+        <span id="opt-b-text"></span><span class="letter">B</span>
+      </div>
+    </div>
+
+    <div class="quiz-nav">
+      <button class="btn secondary" id="btn-back">পেছনে</button>
+      <button class="btn secondary" id="btn-skip" style="visibility:hidden;">পরে দেখব</button>
+    </div>
+  </section>
+
+  <!-- ===================== RESULT SCREEN ===================== -->
+  <section class="screen" id="screen-result">
+    <div class="serif" style="font-size:14px;color:var(--ink-muted);margin-bottom:6px;" id="result-hello"></div>
+    <div class="result-sub">এটি একটি স্ব-মূল্যায়নমূলক ফলাফল — এটিকে নিজেকে বোঝার একটি সূত্র হিসেবে দেখুন, চূড়ান্ত রায় হিসেবে নয়।</div>
+
+    <div class="card-note" id="raw-summary"></div>
+    <div class="card-note" id="weighted-summary"></div>
+
+    <h2 style="font-size:22px;margin:28px 0 12px;">PDF-ভিত্তিক চূড়ান্ত ধরন</h2>
+    <h1 class="result-type" id="result-type">ISTJ</h1>
+
+    <div id="scales"></div>
+
+    <div class="card-note">
+      <b>স্কোরিং:</b> প্রতিটি forced-choice প্রশ্নে নির্বাচিত বক্তব্যের সংশ্লিষ্ট preference-এ ১ পয়েন্ট যোগ হয়। এরপর PDF-এর Appendix অনুযায়ী continuous scale scores-এ weighting প্রয়োগ করা হয়: Sensing +1, Thinking +1, Judging +2, Perceiving −2। তারপর PDF-এর SPSS comparison rule অনুযায়ী প্রতিটি bipolar pair থেকে একটি preference নির্ধারণ করা হয়।
+    </div>
+
+    <div class="card-note">
+      <b>Tie সম্পর্কে:</b> raw score-এ tie হলে এই ফলাফলে তা আলাদাভাবে দেখানো হয় এবং সব সম্ভাব্য raw combination দেখানো হয়। তবে PDF-এর official categorical rule-এ tie-এর জন্য আলাদা “show all types” rule নেই; Appendix-এর GT/LE rules অনুসরণ করে একটি PDF-based final type নির্ধারণ করা হয়।
+    </div>
+
+    <div class="card-note">
+      <b>একটি কথা:</b> এই পরীক্ষাটি Leslie J. Francis ও Andrew Village প্রণীত <i>Francis Psychological Type Scales (FPTS)</i>-এর ৪০টি forced-choice কাঠামো অনুসরণ করে তৈরি একটি বাংলা, অ-বাণিজ্যিক adaptation। এটি FPTS-এর অফিসিয়াল/অনুমোদিত বাংলা সংস্করণ নয় এবং MBTI-এর বিকল্পও নয়। এটি জাং-এর psychological type framework-এর ওপর ভিত্তি করে আত্ম-পর্যবেক্ষণের একটি সাধারণ questionnaire।
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="btn-email">ফলাফল ইমেইলে পাঠান</button>
+      <button class="btn ghost" id="btn-copy">RAW ডেটা কপি করুন</button>
+      <button class="btn secondary" id="btn-restart">আবার শুরু করুন</button>
+    </div>
+
+    <details class="raw">
+      <summary>RAW ডেটা দেখুন (প্রতিটি প্রশ্নের উত্তর)</summary>
+      <table class="raw-table" id="raw-table">
+        <thead><tr><th>প্রশ্ন</th><th>নির্বাচিত</th><th>উত্তরের লেখা</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const SECTIONS = [
+  { key:'EI', title:'বহির্মুখিতা ও অন্তর্মুখিতা', poleA:'বহির্মুখী (E)', poleB:'অন্তর্মুখী (I)', color:'var(--gold)' },
+  { key:'JP', title:'গুছানো ও উন্মুক্ত মনোভাব',    poleA:'সিদ্ধান্তমুখী (J)', poleB:'উন্মুক্ত মনোভাব (P)', color:'var(--rose)' },
+  { key:'SN', title:'বাস্তবমুখিতা ও কল্পনাশীলতা', poleA:'বাস্তবমুখী (S)', poleB:'কল্পনামুখী (N)', color:'var(--teal)' },
+  { key:'TF', title:'যুক্তি ও অনুভূতি',            poleA:'যুক্তিনির্ভর (T)', poleB:'অনুভূতিনির্ভর (F)', color:'var(--rust)' },
+];
+
+const RAW_ITEMS = [
+["সক্রিয় থাকতে ভালো লাগে","চুপচাপ ভেবে নিতে ভালো লাগে"],
+["মানুষের সঙ্গে মিশতে ভালো লাগে","নিজের মতো থাকতে ভালো লাগে"],
+["অনেক বন্ধু থাকা ভালো লাগে","অল্প কয়েকজন ঘনিষ্ঠ বন্ধু থাকাই ভালো লাগে"],
+["পার্টি বা সামাজিক অনুষ্ঠান ভালো লাগে","পার্টি বা সামাজিক অনুষ্ঠান তেমন ভালো লাগে না"],
+["অন্যদের সঙ্গে থাকলে আরও উৎসাহ পাই","অনেক মানুষের সঙ্গে থাকলে ক্লান্ত লাগে"],
+["দলবদ্ধভাবে কাজ করতে বেশি ভালো লাগে","একা কাজ করতে বেশি ভালো লাগে"],
+["মানুষের সঙ্গে ও সামাজিক কাজে যুক্ত থাকতে ভালো লাগে","সামাজিকতা থেকে কিছুটা দূরে থাকতে ভালো লাগে"],
+["বেশি কথা বলতে ভালো লাগে","কম কথা বলতে ভালো লাগে"],
+["নিজেকে বহির্মুখী মনে হয়","নিজেকে অন্তর্মুখী মনে হয়"],
+["কথা বলার সময় যা মনে আসে তা বলে ফেলি","কথা বলার আগে ভেবে নিই কী বলব"],
+
+["নিয়মিত রুটিন মেনে চলতে ভালো লাগে","একই রুটিনে থাকতে ভালো লাগে না"],
+["সবকিছু গুছানো ও নির্দিষ্টভাবে থাকা ভালো লাগে","বিষয়গুলো খোলা ও পরিবর্তনের সুযোগ থাকা ভালো লাগে"],
+["সিদ্ধান্ত নেওয়ার পর সেই অনুযায়ী কাজ করি","পরিস্থিতি অনুযায়ী হঠাৎ সিদ্ধান্ত নিয়ে কাজ করতে পারি"],
+["পরিস্থিতি নিজের নিয়ন্ত্রণে রাখতে ভালো লাগে","পরিস্থিতির সঙ্গে মানিয়ে নিতে ভালো লাগে"],
+["সবকিছু পরিপাটি ও নিয়মমতো রাখতে ভালো লাগে","খুব বেশি নিয়ম না মেনে সহজভাবে চলতে ভালো লাগে"],
+["আগে থেকে সবকিছু গুছিয়ে রাখতে ভালো লাগে","সময়মতো পরিস্থিতি অনুযায়ী কাজ করতে ভালো লাগে"],
+["সময় মেনে চলতে পছন্দ করি","নিজের সুবিধামতো ধীরে-সুস্থে চলতে পছন্দ করি"],
+["কাজের বিস্তারিত পরিকল্পনা করতে ভালো লাগে","বিস্তারিত পরিকল্পনা করতে ভালো লাগে না"],
+["কী হবে তা আগে থেকে নিশ্চিত থাকতে ভালো লাগে","কী হবে তা খোলা রেখে দিতে ভালো লাগে"],
+["নির্দিষ্ট নিয়ম ও পদ্ধতি মেনে চলতে ভালো লাগে","পরিস্থিতি অনুযায়ী নিজের মতো করে চলতে ভালো লাগে"],
+
+["বাস্তব তথ্য ও ঘটনা নিয়ে ভাবতে ভালো লাগে","বিভিন্ন ধারণা ও তত্ত্ব নিয়ে ভাবতে ভালো লাগে"],
+["বাস্তবে কাজে লাগবে এমন বিষয় পছন্দ করি","নতুন চিন্তা বা অনুপ্রেরণা দেয় এমন বিষয় পছন্দ করি"],
+["যা বাস্তবে দেখা বা করা যায়, সেসব বেশি পছন্দ করি","ধারণা বা কল্পনার বিষয় বেশি পছন্দ করি"],
+["নিজের হাতে কিছু তৈরি করতে ভালো লাগে","নতুন কিছু কীভাবে তৈরি করা যায়, তার পরিকল্পনা করতে ভালো লাগে"],
+["প্রচলিত ও পরিচিত পদ্ধতি পছন্দ করি","নতুন ও ভিন্ন পদ্ধতি চেষ্টা করতে ভালো লাগে"],
+["ছোট ছোট বিস্তারিত বিষয় খেয়াল করি","কোনো বিষয়ের মূল অর্থ বা তাৎপর্য নিয়ে বেশি ভাবি"],
+["বাস্তব পরিস্থিতি দেখে সিদ্ধান্ত নিতে পছন্দ করি","কল্পনা ও নতুন সম্ভাবনা নিয়ে ভাবতে পছন্দ করি"],
+["এখন কী ঘটছে, সেটার দিকে বেশি নজর দিই","ভবিষ্যতে কী হতে পারে, সেটার দিকে বেশি নজর দিই"],
+["কোনো কিছু যেমন আছে, তেমনই রাখতে ভালো লাগে","কোনো কিছু আরও ভালো করার কথা ভাবতে ভালো লাগে"],
+["বাস্তব ও ব্যবহারিকভাবে ভাবতে ভালো লাগে","কল্পনা ও সম্ভাবনা নিয়ে ভাবতে ভালো লাগে"],
+
+["কোনটি ন্যায়সঙ্গত, সেটি বেশি গুরুত্বপূর্ণ","সবার মধ্যে মিল ও শান্তি থাকা বেশি গুরুত্বপূর্ণ"],
+["কোনো বিষয় যুক্তি দিয়ে বিশ্লেষণ করতে ভালো লাগে","অন্য মানুষ কী অনুভব করছে, তা বুঝতে ভালো লাগে"],
+["সিদ্ধান্ত নেওয়ার সময় যুক্তি দিয়ে ভাবি","সিদ্ধান্ত নেওয়ার সময় অনুভূতিকেও গুরুত্ব দিই"],
+["নিজের মতামতে দৃঢ় থাকতে পারি","অন্যের প্রতি নরমভাবে আচরণ করতে পছন্দ করি"],
+["ভুল-ত্রুটি খুঁজে বের করতে সহজ হয়","অন্যের ভালো দিকগুলো দেখতে সহজ হয়"],
+["কোনটি যুক্তিসঙ্গত, সেটি বেশি দেখি","কোনটি মানুষের জন্য ভালো, সেটি বেশি দেখি"],
+["সত্য কথাটি সরাসরি বলতে পছন্দ করি","সত্য বললেও কীভাবে বললে অন্যের খারাপ লাগবে না, সেটা ভাবি"],
+["কোনো কিছু সহজে বিশ্বাস করি না; আগে যাচাই করতে চাই","মানুষকে বিশ্বাস করতে সহজ হয়"],
+["সত্য ও সঠিক উত্তর খুঁজে পেতে চাই","শান্তি ও ভালো সম্পর্ক বজায় রাখতে চাই"],
+["ন্যায় ও নিরপেক্ষতাকে বেশি গুরুত্ব দিই","মানুষের প্রতি আন্তরিকতা ও মমতাকে বেশি গুরুত্ব দিই"],
+];
+
+const ITEMS = RAW_ITEMS.map((pair,i)=>({
+  n:i+1,
+  sectionIdx: Math.floor(i/10),
+  a:pair[0],
+  b:pair[1],
+}));
+
+const BN_DIGITS = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+function bn(num){ return String(num).split('').map(d=> (d>='0'&&d<='9') ? BN_DIGITS[d] : d).join(''); }
+
+/* ---------------- STATE ---------------- */
+let current = 0;
+const answers = new Array(40).fill(null); // 'A' | 'B'
+
+/* ---------------- ELEMENTS ---------------- */
+const screens = {
+  intro: document.getElementById('screen-intro'),
+  quiz: document.getElementById('screen-quiz'),
+  result: document.getElementById('screen-result'),
+};
+function showScreen(name){
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  screens[name].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('btn-start').addEventListener('click', ()=>{
+  current = 0;
+  renderQuestion();
+  showScreen('quiz');
+});
+
+document.getElementById('btn-back').addEventListener('click', ()=>{
+  if(current>0){ current--; renderQuestion(); }
+});
+
+/* ---------------- RENDER QUIZ ---------------- */
+function renderQuestion(){
+  const item = ITEMS[current];
+  const section = SECTIONS[item.sectionIdx];
+
+  document.getElementById('progress-text').textContent = `প্রশ্ন ${bn(current+1)} / ৪০`;
+  document.getElementById('section-tag').innerHTML = `ভাগ ${bn(item.sectionIdx+1)} · <b>${section.title}</b>`;
+  document.getElementById('qnum').textContent = `প্রশ্ন নং ${bn(item.n)}`;
+  document.getElementById('question-title').textContent = 'কোনটি আপনার সঙ্গে বেশি মেলে?';
+
+  document.getElementById('opt-a-text').textContent = item.a;
+  document.getElementById('opt-b-text').textContent = item.b;
+
+  const optA = document.getElementById('opt-a');
+  const optB = document.getElementById('opt-b');
+  optA.classList.toggle('selected', answers[current]==='A');
+  optB.classList.toggle('selected', answers[current]==='B');
+
+  document.getElementById('btn-back').disabled = current===0;
+  updateCompass();
+}
+
+function selectChoice(choice){
+  answers[current] = choice;
+  renderQuestion();
+  setTimeout(()=>{
+    if(current < ITEMS.length-1){
+      current++;
+      renderQuestion();
+    } else {
+      computeResults();
+      showScreen('result');
+    }
+  }, 260);
+}
+document.getElementById('opt-a').addEventListener('click', ()=>selectChoice('A'));
+document.getElementById('opt-b').addEventListener('click', ()=>selectChoice('B'));
+
+/* ---------------- COMPASS SVG ---------------- */
+function polarToXY(cx,cy,r,angleDeg){
+  const a = (angleDeg-90) * Math.PI/180;
+  return { x: cx + r*Math.cos(a), y: cy + r*Math.sin(a) };
+}
+function describeArc(cx,cy,r,startAngle,endAngle){
+  if(endAngle<=startAngle) return '';
+  const start = polarToXY(cx,cy,r,startAngle);
+  const end = polarToXY(cx,cy,r,endAngle);
+  const largeArc = (endAngle-startAngle) > 180 ? 1 : 0;
+  return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+}
+function updateCompass(){
+  const answeredPerSection = [0,0,0,0];
+  answers.forEach((a,i)=>{ if(a) answeredPerSection[Math.floor(i/10)]++; });
+  const arcIds = ['arc-ei','arc-jp','arc-sn','arc-tf'];
+  const quarter = 90;
+  arcIds.forEach((id,idx)=>{
+    const start = idx*quarter + 4;
+    const progress = answeredPerSection[idx]/10;
+    const end = idx*quarter + 4 + progress*(quarter-8);
+    document.getElementById(id).setAttribute('d', describeArc(28,28,24,start,Math.max(start,end)));
+  });
+}
+
+/* ---------------- SCORING ---------------- */
+/*
+  PDF-faithful FPTS scoring.
+
+  The paper states that each of the four bipolar pairs has two continuous
+  scale scores, and Appendix 1 specifies the weighting and categorical rules:
+
+    Sensing +1
+    Thinking +1
+    Judging +2
+    Perceiving -2
+
+  Then:
+    IF (E GT I) ORI = 1  -> E
+    IF (E LE I) ORI = 2  -> I
+    IF (S GT N) PER = 1  -> S
+    IF (S LE N) PER = 2  -> N
+    IF (T GT F) JUD = 1  -> T
+    IF (T LE F) JUD = 2  -> F
+    IF (J GT P) ATD = 1  -> J
+    IF (J LE P) ATD = 2  -> P
+
+  Raw scores are retained and displayed separately so ties are transparent.
+*/
+function computeResults(){
+  const scores = { E:0,I:0, J:0,P:0, S:0,N:0, T:0,F:0 };
+  const poleMap = [
+    ['E','I'], // section 0
+    ['J','P'], // section 1
+    ['S','N'], // section 2
+    ['T','F'], // section 3
+  ];
+
+  answers.forEach((choice,i)=>{
+    const sectionIdx = Math.floor(i/10);
+    const [poleA, poleB] = poleMap[sectionIdx];
+    if(choice==='A') scores[poleA]++;
+    else if(choice==='B') scores[poleB]++;
+  });
+
+  // Appendix 1 weighting, applied to the continuous/raw scale scores.
+  const weighted = {
+    E: scores.E,
+    I: scores.I,
+    S: scores.S + 1,
+    N: scores.N,
+    T: scores.T + 1,
+    F: scores.F,
+    J: scores.J + 2,
+    P: scores.P - 2,
+  };
+
+  // Exact direction of the Appendix rules: GT gives the first pole;
+  // LE (including equality) gives the second pole.
+  const type =
+    (weighted.E > weighted.I ? 'E' : 'I') +
+    (weighted.S > weighted.N ? 'S' : 'N') +
+    (weighted.T > weighted.F ? 'T' : 'F') +
+    (weighted.J > weighted.P ? 'J' : 'P');
+
+  renderResults(scores, weighted, type);
+}
+
+const POLE_DESC = {
+  E:'বহির্মুখী', I:'অন্তর্মুখী',
+  S:'বাস্তবমুখী', N:'কল্পনামুখী',
+  T:'যুক্তিনির্ভর', F:'অনুভূতিনির্ভর',
+  J:'সিদ্ধান্তমুখী', P:'উন্মুক্ত মনোভাবাপন্ন',
+};
+
+function allRawTypes(scores){
+  const choices = {
+    EI: scores.E === scores.I ? ['E','I'] : [scores.E > scores.I ? 'E' : 'I'],
+    SN: scores.S === scores.N ? ['S','N'] : [scores.S > scores.N ? 'S' : 'N'],
+    TF: scores.T === scores.F ? ['T','F'] : [scores.T > scores.F ? 'T' : 'F'],
+    JP: scores.J === scores.P ? ['J','P'] : [scores.J > scores.P ? 'J' : 'P'],
+  };
+
+  const types = [];
+  choices.EI.forEach(e=>{
+    choices.SN.forEach(s=>{
+      choices.TF.forEach(t=>{
+        choices.JP.forEach(j=>{
+          types.push(e+s+t+j);
+        });
+      });
+    });
+  });
+  return types;
+}
+
+function renderResults(scores, weighted, type){
+  const uname = document.getElementById('uname').value.trim();
+  document.getElementById('result-hello').textContent =
+    uname ? `${uname}-এর ফলাফল` : 'আপনার ফলাফল';
+  document.getElementById('result-type').textContent = type;
+
+  const rawTypes = allRawTypes(scores);
+  const tiedPairs = [];
+  if(scores.E === scores.I) tiedPairs.push(`E/I (${bn(scores.E)}–${bn(scores.I)})`);
+  if(scores.S === scores.N) tiedPairs.push(`S/N (${bn(scores.S)}–${bn(scores.N)})`);
+  if(scores.T === scores.F) tiedPairs.push(`T/F (${bn(scores.T)}–${bn(scores.F)})`);
+  if(scores.J === scores.P) tiedPairs.push(`J/P (${bn(scores.J)}–${bn(scores.P)})`);
+
+  document.getElementById('raw-summary').innerHTML = `
+    <b>Raw score:</b>
+    E ${bn(scores.E)} / I ${bn(scores.I)} ·
+    S ${bn(scores.S)} / N ${bn(scores.N)} ·
+    T ${bn(scores.T)} / F ${bn(scores.F)} ·
+    J ${bn(scores.J)} / P ${bn(scores.P)}
+    <br><br>
+    <b>${tiedPairs.length ? 'Raw tie পাওয়া গেছে:' : 'Raw score-এ tie নেই।'}</b>
+    ${tiedPairs.length ? tiedPairs.join(' · ') : ''}
+    ${tiedPairs.length ? `<br><br><b>Raw score থেকে সম্ভাব্য type:</b> ${rawTypes.join(', ')}` : ''}
+  `;
+
+  document.getElementById('weighted-summary').innerHTML = `
+    <b>PDF Appendix weighting-এর পর:</b>
+    E ${bn(weighted.E)} / I ${bn(weighted.I)} ·
+    S ${bn(weighted.S)} / N ${bn(weighted.N)} ·
+    T ${bn(weighted.T)} / F ${bn(weighted.F)} ·
+    J ${bn(weighted.J)} / P ${bn(weighted.P)}
+    <br><br>
+    <b>PDF-based final type:</b> ${type}
+  `;
+
+  const rows = [
+    {a:'E',b:'I',color:'var(--gold)',label:SECTIONS[0].title},
+    {a:'S',b:'N',color:'var(--teal)',label:SECTIONS[2].title},
+    {a:'T',b:'F',color:'var(--rust)',label:SECTIONS[3].title},
+    {a:'J',b:'P',color:'var(--rose)',label:SECTIONS[1].title},
+  ];
+
+  const container = document.getElementById('scales');
+  container.innerHTML = '';
+  rows.forEach(r=>{
+    const total = weighted[r.a]+weighted[r.b];
+    const pct = total ? (weighted[r.a]/total*100) : 50;
+    const div = document.createElement('div');
+    div.className = 'scale';
+    div.innerHTML = `
+      <div class="scale-labels">
+        <span class="left">${POLE_DESC[r.a]} (${r.a}) — ${bn(weighted[r.a])}</span>
+        <span class="right">${POLE_DESC[r.b]} (${r.b}) — ${bn(weighted[r.b])}</span>
+      </div>
+      <div class="bar">
+        <div class="fill" style="left:0;width:${Math.max(0,Math.min(100,pct))}%;background:${r.color};opacity:0.55;"></div>
+        <div class="marker" style="left:${Math.max(0,Math.min(100,pct))}%;"></div>
+      </div>
+      <div class="scale-note">${r.label} · raw: ${scores[r.a]} / ${scores[r.b]}</div>
+    `;
+    container.appendChild(div);
+  });
+
+  const tbody = document.querySelector('#raw-table tbody');
+  tbody.innerHTML = '';
+  ITEMS.forEach((item,i)=>{
+    const choice = answers[i];
+    const text = choice==='A' ? item.a : (choice==='B' ? item.b : '—');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${bn(item.n)}</td><td>${choice||'—'}</td><td>${text}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  window._resultState = { uname, scores, weighted, type, rawTypes, tiedPairs };
+}
+
+/* ---------------- EMAIL + COPY ---------------- */
+function buildCompactBody(){
+  const { uname, scores, weighted, type, rawTypes, tiedPairs } = window._resultState;
+  const now = new Date();
+  const stamp = now.toLocaleString('bn-BD');
+  const answerCodes = answers.map((a,i)=> `${i+1}${a||'-'}`).join(',');
+  let body = '';
+  body += `নাম: ${uname || '(দেওয়া হয়নি)'}\n`;
+  body += `তারিখ/সময়: ${stamp}\n`;
+  body += `ফলাফলের ধরন: ${type}\n\n`;
+  body += `স্কোর:\n`;
+  body += `E:${scores.E} I:${scores.I}\n`;
+  body += `S:${scores.S} N:${scores.N}\n`;
+  body += `T:${scores.T} F:${scores.F}\n`;
+  body += `J:${scores.J} P:${scores.P}\n\n`;
+  body += `উত্তরকোড (প্রশ্ন নং + নির্বাচিত অপশন):\n${answerCodes}\n`;
+  return body;
+}
+
+function buildFullRawText(){
+  const { uname, scores, weighted, type, rawTypes, tiedPairs } = window._resultState;
+  const now = new Date();
+  const stamp = now.toLocaleString('bn-BD');
+  let out = '';
+  out += `=== মনস্তাত্ত্বিক ধরন যাচাই — RAW ডেটা ===\n`;
+  out += `নাম: ${uname || '(দেওয়া হয়নি)'}\n`;
+  out += `তারিখ/সময়: ${stamp}\n`;
+  out += `ফলাফলের ধরন: ${type}\n\n`;
+  out += `স্কোর:\nE:${scores.E} I:${scores.I}\nS:${scores.S} N:${scores.N}\nT:${scores.T} F:${scores.F}\nJ:${scores.J} P:${scores.P}\n\n`;
+  out += `প্রশ্নভিত্তিক উত্তর:\n`;
+  ITEMS.forEach((item,i)=>{
+    const choice = answers[i];
+    const text = choice==='A' ? item.a : (choice==='B' ? item.b : '(উত্তর দেওয়া হয়নি)');
+    out += `${item.n}. [${choice||'-'}] ${text}\n`;
+  });
+  return out;
+}
+
+document.getElementById('btn-email').addEventListener('click', ()=>{
+  const subject = `FPTS ফলাফল — ${window._resultState.type} — ${window._resultState.uname || 'নাম নেই'}`;
+  const body = buildCompactBody();
+  const mailto = `mailto:sakirulislamapon@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+  showToast('আপনার ইমেইল অ্যাপ খোলা হচ্ছে — পাঠাতে সেখানে "Send" চাপুন');
+});
+
+document.getElementById('btn-copy').addEventListener('click', async ()=>{
+  const text = buildFullRawText();
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('সম্পূর্ণ RAW ডেটা কপি হয়েছে — এখন ইমেইলে পেস্ট করে পাঠাতে পারেন');
+  }catch(e){
+    showToast('কপি করা যায়নি — নিচের "RAW ডেটা দেখুন" থেকে ম্যানুয়ালি কপি করুন');
+  }
+});
+
+document.getElementById('btn-restart').addEventListener('click', ()=>{
+  answers.fill(null);
+  current = 0;
+  document.getElementById('uname').value = document.getElementById('uname').value; // keep name
+  showScreen('intro');
+});
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(()=> t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
